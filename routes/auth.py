@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password, check_password
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
 
 from database.db import db
@@ -21,7 +21,7 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         # Check if user exists and password matches the hash
-        if not user or not check_password(user.password, password):
+        if not user or not check_password_hash(user.password, password):
             flash('Please check your login details and try again.', 'error')
             return redirect(url_for('auth.login'))
 
