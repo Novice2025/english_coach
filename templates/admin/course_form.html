@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}{{ "Edit" if course else "Create" }} Course | Magnitude Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-12 px-4">
+    <nav class="flex mb-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+        <a href="{{ url_for('admin.dashboard') }}" class="hover:text-indigo-600">Admin</a>
+        <span class="mx-2">/</span>
+        <a href="{{ url_for('admin.manage_courses') }}" class="hover:text-indigo-600">Courses</a>
+        <span class="mx-2 text-slate-200">/</span>
+        <span class="text-slate-900">{{ "Edit" if course else "New" }}</span>
+    </nav>
+
+    <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-indigo-100/50 overflow-hidden">
+        <div class="p-10 border-b border-slate-50 bg-slate-50/50">
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight italic">
+                {{ "Update Course Details" if course else "Launch New Course" }}
+            </h1>
+            <p class="text-slate-500 text-sm font-medium mt-1">Fill in the primary details for your curriculum.</p>
+        </div>
+
+        <form method="POST" class="p-10 space-y-8">
+            <div>
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Course Title</label>
+                <input type="text" name="title" value="{{ course.title if course else '' }}" required
+                       class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-0 transition-all font-bold text-slate-900 outline-none"
+                       placeholder="e.g., Business English Mastery">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Description</label>
+                <textarea name="description" rows="4" required
+                          class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-0 transition-all font-bold text-slate-900 outline-none"
+                          placeholder="What will students achieve in this course?">{{ course.description if course else '' }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Price (USD)</label>
+                    <input type="number" step="0.01" name="price" value="{{ course.price if course else '0.00' }}" required
+                           class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-0 transition-all font-bold text-slate-900 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Instructor Name</label>
+                    <input type="text" name="instructor_name" value="{{ course.instructor_name if course else 'Vishul Daby' }}" required
+                           class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-0 transition-all font-bold text-slate-900 outline-none">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100">
+                <div>
+                    <p class="font-black text-slate-900 text-sm">Publish Course</p>
+                    <p class="text-[10px] text-indigo-500 font-bold uppercase tracking-tight">Make this visible to students immediately</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_published" class="sr-only peer" {{ 'checked' if course and course.is_published else '' }}>
+                    <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
+
+            <div class="pt-6 flex items-center justify-end space-x-4">
+                <a href="{{ url_for('admin.manage_courses') }}" class="text-xs font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest">Cancel</a>
+                <button type="submit" class="bg-slate-900 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl shadow-indigo-100 active:scale-95">
+                    {{ "Save Changes" if course else "Create Course" }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+/* Custom tweaks on top of Tailwind if you want */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}

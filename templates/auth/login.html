@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Magnitude v2.0{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center px-4">
+    <div class="max-w-md w-full">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black text-slate-900 tracking-tighter italic uppercase">Magnitude <span class="text-indigo-600">v2.0</span></h1>
+            <p class="text-slate-500 font-bold mt-2 uppercase text-[10px] tracking-[0.3em]">Student Portal Access</p>
+        </div>
+
+        <div class="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-indigo-100/50">
+            <form method="POST" action="{{ url_for('auth.login') }}" class="space-y-6">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                    <input type="email" name="email" required 
+                           class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-0 transition-all font-bold text-slate-900 outline-none"
+                           placeholder="name@example.com">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Password</label>
+                    <input type="password" name="password" required 
+                           class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-0 transition-all font-bold text-slate-900 outline-none"
+                           placeholder="••••••••">
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl shadow-indigo-100 active:scale-[0.98]">
+                    Enter Arena
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-slate-100 text-center">
+                <p class="text-slate-400 text-xs font-bold">New to the program? 
+                    <a href="{{ url_for('auth.register') }}" class="text-indigo-600 hover:underline">Create Account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

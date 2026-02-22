@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{{ current_user.name }}'s Profile | Vishul English Coach{% endblock %}
+
+{% block content %}
+<style>
+    .badge-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .badge-card:hover {
+        transform: translateY(-5px) scale(1.05);
+    }
+    .profile-gradient {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+</style>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden mb-10">
+        <div class="profile-gradient h-32 w-full"></div>
+        <div class="px-8 pb-8 -mt-12">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between space-y-6 md:space-y-0">
+                <div class="flex items-end space-x-6">
+                    <div class="h-32 w-32 rounded-3xl bg-white p-2 shadow-xl">
+                        <div class="h-full w-full rounded-2xl bg-slate-100 flex items-center justify-center text-4xl font-black text-indigo-600 border border-slate-100 uppercase">
+                            {{ current_user.name[0] }}
+                        </div>
+                    </div>
+                    <div class="pb-2">
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">{{ current_user.name }}</h1>
+                        <p class="text-slate-500 font-medium italic">Student Member since {{ current_user.created_at.strftime('%Y') }}</p>
+                    </div>
+                </div>
+                <div class="flex space-x-3">
+                    <a href="{{ url_for('student.my_courses') }}" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition-colors text-sm">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm flex items-center space-x-5">
+            <div class="bg-blue-50 h-14 w-14 rounded-2xl flex items-center justify-center text-2xl">⏱️</div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Learning Time</p>
+                <p class="text-2xl font-black text-slate-900">{{ watch_time }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm flex items-center space-x-5">
+            <div class="bg-indigo-50 h-14 w-14 rounded-2xl flex items-center justify-center text-2xl">💎</div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Points</p>
+                <p class="text-2xl font-black text-indigo-600">{{ current_user.xp_points }} XP</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm flex items-center space-x-5">
+            <div class="bg-orange-50 h-14 w-14 rounded-2xl flex items-center justify-center text-2xl">🔥</div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Daily Streak</p>
+                <p class="text-2xl font-black text-orange-600">{{ current_user.streak_days }} Days</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-slate-50 rounded-[3rem] p-10 border border-slate-100">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Earned Badges</h2>
+            <span class="bg-white px-4 py-1 rounded-full text-xs font-bold text-slate-400 border border-slate-200 uppercase tracking-tighter">
+                {{ badges|length }} Achievements
+            </span>
+        </div>
+
+        {% if badges %}
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                {% for badge in badges %}
+                <div class="badge-card bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200 flex flex-col items-center text-center">
+                    <div class="h-20 w-20 bg-slate-50 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner">
+                        {{ badge.icon }}
+                    </div>
+                    <h3 class="font-black text-slate-900 text-sm uppercase tracking-tight">{{ badge.name }}</h3>
+                    <p class="text-[10px] text-slate-500 mt-1 leading-tight">{{ badge.desc }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-12 bg-white rounded-[2rem] border border-dashed border-slate-300">
+                <p class="text-slate-400 font-medium">No badges earned yet. Keep studying to unlock achievements!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vishul English Coach{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+
+<header class="bg-slate-900 text-slate-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="text-xl font-black tracking-tighter text-indigo-400">
+            VISHUL<span class="text-white">COACH.</span>
+        </div>
+
+        <nav class="flex items-center space-x-6 text-sm font-bold">
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="text-slate-300 hover:text-white transition">Admin Stats</a>
+                    <a href="{{ url_for('admin.manage_courses') }}" class="text-slate-300 hover:text-white transition">Manage Content</a>
+                {% else %}
+                    <a href="{{ url_for('student.my_courses') }}" class="text-slate-300 hover:text-white transition">My Courses</a>
+                    <a href="{{ url_for('student.leaderboard') }}" class="text-slate-300 hover:text-white transition">Leaderboard</a>
+                    <a href="{{ url_for('student.profile') }}" class="bg-indigo-600 px-4 py-2 rounded-xl text-white hover:bg-indigo-700 transition">My Profile</a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="text-rose-400 hover:text-rose-300 transition">Logout</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="hover:text-white transition">Login</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main class="flex-1">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mb-8 space-y-2">
+            {% for category, message in messages %}
+                <div class="px-6 py-3 rounded-2xl text-sm font-bold shadow-sm
+                     {% if category == 'error' %}bg-rose-50 text-rose-800 border border-rose-100
+                     {% elif category == 'success' %}bg-emerald-50 text-emerald-800 border border-emerald-100
+                     {% else %}bg-sky-50 text-sky-800 border border-sky-100{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer class="bg-white border-t border-slate-200 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+        <span>&copy; 2026 Vishul English Coach</span>
+        <span class="font-medium">Empowering Professional Communication</span>
+    </div>
+</footer>
+</body>
+</html>

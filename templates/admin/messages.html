@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Student Inquiries | Magnitude Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-12 px-4">
+    <div class="mb-10">
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight italic uppercase">Inbox</h1>
+        <p class="text-slate-500 font-bold mt-1 uppercase text-[10px] tracking-[0.3em]">Support & Coaching Inquiries</p>
+    </div>
+
+    <div class="space-y-6">
+        {% for msg in messages %}
+        <div class="bg-white border {% if not msg.is_read %}border-indigo-400 shadow-lg shadow-indigo-50{% else %}border-slate-200{% endif %} rounded-[2.5rem] p-8 transition-all">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <div class="flex items-center space-x-4">
+                    <div class="h-12 w-12 rounded-full bg-slate-900 flex items-center justify-center text-white font-black text-xs">
+                        {{ msg.user.name[0] }}
+                    </div>
+                    <div>
+                        <h3 class="font-black text-slate-900 text-lg leading-tight">{{ msg.subject }}</h3>
+                        <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mt-1">From: {{ msg.user.name }} ({{ msg.user.email }})</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ msg.created_at.strftime('%b %d, %Y - %H:%M') }}</p>
+                    {% if not msg.is_read %}
+                        <span class="inline-block px-2 py-1 bg-indigo-100 text-indigo-600 text-[8px] font-black uppercase rounded mt-2">New Inquiry</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-6 mb-6">
+                <p class="text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">{{ msg.body }}</p>
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <a href="mailto:{{ msg.user.email }}?subject=Re: {{ msg.subject }}" 
+                   class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-md shadow-indigo-100">
+                    Reply via Email
+                </a>
+                {% if not msg.is_read %}
+                <form action="{{ url_for('admin.mark_as_read', message_id=msg.id) }}" method="POST" class="inline">
+                    <button type="submit" class="bg-slate-100 text-slate-400 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all">
+                        Mark as Resolved
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200 p-20 text-center">
+            <p class="text-slate-400 font-bold italic">No messages found. Your students are all set!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{% if student %}Edit Student{% else %}New Student{% endif %} | English Coach{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-slate-800 mb-6">{% if student %}Edit Student: {{ student.name }}{% else %}Create New Student{% endif %}</h1>
+
+<div class="bg-white shadow rounded-lg p-6">
+    <form method="POST">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Student Name</label>
+            <input type="text" id="name" name="name" value="{{ student.name if student else '' }}"
+                   class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+            <input type="email" id="email" name="email" value="{{ student.email if student else '' }}"
+                   class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+
+        <div class="mb-6">
+            <label for="password" class="block text-sm font-medium text-slate-700 mb-1">
+                Password {% if student %}(Leave blank to keep current){% endif %}
+            </label>
+            <input type="password" id="password" name="password"
+                   class="w-full border rounded px-3 py-2 text-sm" {% if not student %}required{% endif %}>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+            <a href="{{ url_for('admin.manage_students') }}" class="bg-gray-200 hover:bg-gray-300 text-slate-700 py-2 px-4 rounded-lg text-sm font-semibold">Cancel</a>
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">
+                {% if student %}Update Student{% else %}Create Student{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

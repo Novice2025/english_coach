@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Add Lesson to {{ module.title }}</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Lesson Title</label>
+                    <input type="text" name="title" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Order Index</label>
+                    <input type="number" name="order_index" value="0" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Upload File (PDF or Video)</label>
+                <input type="file" name="lesson_file" class="w-full px-3 py-2 border border-dashed border-indigo-300 rounded-lg">
+                <p class="text-xs text-gray-500 mt-1">Leave empty if using a Video Link instead.</p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">OR Video URL (YouTube/Vimeo)</label>
+                <input type="text" name="video_url" class="w-full px-3 py-2 border rounded-lg">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                <textarea name="description" class="w-full px-3 py-2 border rounded-lg h-32"></textarea>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-8 rounded-lg transition">
+                    Create Lesson
+                </button>
+                <a href="{{ url_for('admin.manage_lessons', module_id=module.id) }}" class="text-gray-500 hover:underline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

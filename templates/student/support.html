@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Coaching Support | Magnitude{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-16 px-4">
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-black text-slate-900 tracking-tight italic uppercase">Direct <span class="text-indigo-600">Access</span></h1>
+        <p class="text-slate-500 font-bold mt-2 uppercase text-[10px] tracking-[0.3em]">Need help with a lesson? Message Coach Vishul directly.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="space-y-4">
+            <div class="bg-slate-900 p-6 rounded-[2rem] text-white">
+                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">Response Time</p>
+                <p class="text-lg font-bold italic">Within 24 Hours</p>
+            </div>
+            <div class="bg-white border border-slate-200 p-6 rounded-[2rem]">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Office Hours</p>
+                <p class="text-lg font-black text-slate-900 leading-tight">Mon - Fri<br>9AM - 5PM</p>
+            </div>
+        </div>
+
+        <div class="md:col-span-2 bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-indigo-100/50 p-10">
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Subject</label>
+                    <input type="text" name="subject" required 
+                           class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 transition-all font-bold text-slate-900 outline-none"
+                           placeholder="e.g., Question about Module 3">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Your Message</label>
+                    <textarea name="body" rows="6" required 
+                              class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 transition-all font-bold text-slate-900 outline-none"
+                              placeholder="Describe your challenge..."></textarea>
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl shadow-indigo-100 active:scale-[0.98]">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

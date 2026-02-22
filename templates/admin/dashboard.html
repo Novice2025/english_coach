@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard | English Coach{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <h1 class="text-2xl font-semibold mb-2">
+        Welcome, {{ current_user.name }}!
+    </h1>
+    <p class="text-slate-600 mb-4">
+        This is your student dashboard. Here you'll see your enrolled courses, progress, XP points, and badges.
+    </p>
+
+    <div class="border-t pt-4 mt-4 text-sm text-slate-500">
+        Role: <span class="font-medium">{{ current_user.role }}</span>
+        <br>
+        Email: {{ current_user.email }}
+    </div>
+
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold text-slate-700 mb-3">Your Courses</h2>
+        <p class="text-slate-500">No courses enrolled yet. Check out the <a href="#" class="text-indigo-600 hover:underline">Course Catalog</a>.</p>
+        <!-- This section will be populated in Sprint 3 -->
+    </div>
+</div>
+{% endblock %}
