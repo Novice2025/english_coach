@@ -1,11 +1,5 @@
 from flask import Flask
 from database.db import db
-from routes.auth import auth_bp
-from routes.main import main_bp
-from routes.admin import admin_bp
-from routes.student import student_bp
-from flask_login import LoginManager
-from models.user import User
 import os
 
 def create_app():
@@ -14,7 +8,11 @@ def create_app():
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database', 'english_coach.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
     db.init_app(app)
+    
+    from flask_login import LoginManager
+    from models.user import User
     
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -23,6 +21,12 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+    
+    # Registering inside the function to prevent Circular Imports
+    from routes.auth import auth_bp
+    from routes.main import main_bp
+    from routes.admin import admin_bp
+    from routes.student import student_bp
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
