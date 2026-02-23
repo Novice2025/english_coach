@@ -9,25 +9,34 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        # Using .get() prevents crashes if a field is missing
         email = request.form.get('email')
         name = request.form.get('name')
         password = request.form.get('password')
+
+        if not email or not password:
+            flash('Email and password are required.')
+            return redirect(url_for('auth.register'))
 
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email already exists.')
             return redirect(url_for('auth.register'))
 
+        # Create user with modern hashing
         new_user = User(
             email=email,
             name=name,
             password=generate_password_hash(password, method='scrypt')
         )
 
-        db.session.add(new_user)
-        db.session.commit()
-
-        return redirect(url_for('auth.login'))
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('auth.login'))
+        except Exception as e:
+            db.session.rollback()
+            return f"Database Error: {str(e)}", 500
 
     return render_template('auth/register.html')
 
@@ -36,15 +45,14 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        remember = True if request.form.get('remember') else False
-
+        
         user = User.query.filter_by(email=email).first()
 
         if not user or not check_password_hash(user.password, password):
             flash('Please check your login details and try again.')
             return redirect(url_for('auth.login'))
 
-        login_user(user, remember=remember)
+        login_user(user)
         return redirect(url_for('main.dashboard'))
 
     return render_template('auth/login.html')
