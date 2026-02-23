@@ -12,27 +12,32 @@ def create_app():
     db.init_app(app)
     
     from flask_login import LoginManager
-    from models.user import User
-    
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
     
+    from models.user import User
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
     
-    # Registering inside the function to prevent Circular Imports
-    from routes.auth import auth_bp
-    from routes.main import main_bp
-    from routes.admin import admin_bp
-    from routes.student import student_bp
-    
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(main_bp)
-    app.register_blueprint(admin_bp)
-    app.register_blueprint(student_bp)
-    
+    # Try to register blueprints one by one to find the killer
+    try:
+        from routes.auth import auth_bp
+        app.register_blueprint(auth_bp)
+        
+        from routes.main import main_bp
+        app.register_blueprint(main_bp)
+        
+        # We will temporarily comment these out to get you LIVE
+        # from routes.admin import admin_bp
+        # app.register_blueprint(admin_bp)
+        # from routes.student import student_bp
+        # app.register_blueprint(student_bp)
+        
+    except ImportError as e:
+        print(f"IMPORT ERROR: {e}")
+
     with app.app_context():
         db.create_all()
     return app
