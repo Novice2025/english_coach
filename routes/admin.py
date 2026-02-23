@@ -1,10 +1,11 @@
+from models.user import User, Course, Module, Lesson
 import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from functools import wraps
 from database.db import db
-from models.user import User
+from models.user import User, Course, Module, Lesson
 from models.course import Course
 from models.module import Module
 from models.lesson import Lesson

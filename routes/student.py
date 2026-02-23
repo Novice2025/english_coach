@@ -1,3 +1,4 @@
+from models.user import User, Course, Module, Lesson, Enrollment, LessonProgress, Message
 import io
 from datetime import datetime, timezone
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
