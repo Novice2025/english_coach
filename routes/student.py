@@ -1,4 +1,4 @@
-from models.user import User, Course, Module, Lesson, Enrollment, LessonProgress, Message
+from models.user import User, course, module, lesson, enrollment, lessonProgress, Message
 import io
 from datetime import datetime, timezone
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
@@ -8,9 +8,9 @@ from reportlab.lib.pagesizes import landscape, A4
 from reportlab.lib import colors
 
 from database.db import db
-from models.course import Course
-from models.module import Module
-from models.lesson import Lesson
+from models.course import course
+from models.module import module
+from models.lesson import lesson
 from models.progress import Progress
 from models.user import User
 from models.quiz import Quiz  # Ensure this is imported
@@ -23,12 +23,12 @@ student_bp = Blueprint('student', __name__)
 @student_bp.route('/my-courses')
 @login_required
 def my_courses():
-    courses = Course.query.filter_by(is_published=True).all()
+    courses = course.query.filter_by(is_published=True).all()
     for course in courses:
-        total_lessons = Lesson.query.join(Module).filter(Module.course_id == course.id).count()
+        total_lessons = lesson.query.join(module).filter(module.course_id == course.id).count()
         if total_lessons > 0:
-            completed_count = Progress.query.join(Lesson).join(Module)\
-                .filter(Module.course_id == course.id, Progress.user_id == current_user.id).count()
+            completed_count = Progress.query.join(lesson).join(module)\
+                .filter(module.course_id == course.id, Progress.user_id == current_user.id).count()
             course.progress_percent = int((completed_count / total_lessons) * 100)
         else:
             course.progress_percent = 0
@@ -41,8 +41,8 @@ def my_courses():
 @student_bp.route('/profile')
 @login_required
 def profile():
-    total_mins = db.session.query(db.func.sum(Lesson.duration_minutes))\
-        .join(Progress, Lesson.id == Progress.lesson_id)\
+    total_mins = db.session.query(db.func.sum(lesson.duration_minutes))\
+        .join(Progress, lesson.id == Progress.lesson_id)\
         .filter(Progress.user_id == current_user.id).scalar() or 0
     
     hours = total_mins // 60
@@ -64,9 +64,9 @@ def profile():
 @student_bp.route('/course/<int:course_id>/lesson/<int:lesson_id>')
 @login_required
 def watch_lesson(course_id, lesson_id):
-    course = Course.query.get_or_404(course_id)
-    lesson = Lesson.query.get_or_404(lesson_id)
-    modules = Module.query.filter_by(course_id=course_id).order_by(Module.order_index).all()
+    course = course.query.get_or_404(course_id)
+    lesson = lesson.query.get_or_404(lesson_id)
+    modules = module.query.filter_by(course_id=course_id).order_by(module.order_index).all()
     
     progress_record = Progress.query.filter_by(user_id=current_user.id, lesson_id=lesson.id).first()
     is_completed = progress_record is not None
@@ -86,12 +86,12 @@ def toggle_complete(lesson_id):
     if existing_progress:
         db.session.delete(existing_progress)
         current_user.xp_points = max(0, current_user.xp_points - 10)
-        flash("Lesson marked as incomplete.", "info")
+        flash("lesson marked as incomplete.", "info")
     else:
         new_progress = Progress(user_id=current_user.id, lesson_id=lesson_id)
         db.session.add(new_progress)
         current_user.xp_points += 10
-        flash("Lesson completed! +10 XP earned 🎉", "success")
+        flash("lesson completed! +10 XP earned 🎉", "success")
         
     db.session.commit()
     return redirect(url_for('student.watch_lesson', course_id=course_id, lesson_id=lesson_id))
@@ -101,7 +101,7 @@ def toggle_complete(lesson_id):
 @student_bp.route('/module/<int:module_id>/quiz')
 @login_required
 def take_quiz(module_id):
-    module = Module.query.get_or_404(module_id)
+    module = module.query.get_or_404(module_id)
     quizzes = Quiz.query.filter_by(module_id=module_id).all()
     
     if not quizzes:
@@ -162,13 +162,13 @@ def leaderboard():
 @student_bp.route('/course/<int:course_id>/certificate')
 @login_required
 def download_certificate(course_id):
-    course = Course.query.get_or_404(course_id)
-    total_lessons = Lesson.query.join(Module).filter(Module.course_id == course.id).count()
-    completed_count = Progress.query.join(Lesson).join(Module)\
-        .filter(Module.course_id == course.id, Progress.user_id == current_user.id).count()
+    course = course.query.get_or_404(course_id)
+    total_lessons = lesson.query.join(module).filter(module.course_id == course.id).count()
+    completed_count = Progress.query.join(lesson).join(module)\
+        .filter(module.course_id == course.id, Progress.user_id == current_user.id).count()
     
     if total_lessons == 0 or completed_count < total_lessons:
-        flash("Course not 100% complete.", "error")
+        flash("course not 100% complete.", "error")
         return redirect(url_for('student.my_courses'))
 
     buffer = io.BytesIO()

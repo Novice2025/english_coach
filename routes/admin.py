@@ -1,14 +1,14 @@
-from models.user import User, Course, Module, Lesson
+from models.user import User, course, module, lesson
 import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from functools import wraps
 from database.db import db
-from models.user import User, Course, Module, Lesson
-from models.course import Course
-from models.module import Module
-from models.lesson import Lesson
+from models.user import User, course, module, lesson
+from models.course import course
+from models.module import module
+from models.lesson import lesson
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -29,14 +29,14 @@ def dashboard():
 @admin_bp.route('/courses')
 @admin_required
 def manage_courses():
-    courses = Course.query.all()
+    courses = course.query.all()
     return render_template('admin/courses.html', courses=courses)
 
 @admin_bp.route('/course/new', methods=['GET', 'POST'])
 @admin_required
 def new_course():
     if request.method == 'POST':
-        course = Course(
+        course = course(
             title=request.form.get('title'),
             description=request.form.get('description'),
             instructor_name=request.form.get('instructor_name'),
@@ -50,7 +50,7 @@ def new_course():
 @admin_bp.route('/course/edit/<int:course_id>', methods=['GET', 'POST'])
 @admin_required
 def edit_course(course_id):
-    course = Course.query.get_or_404(course_id)
+    course = course.query.get_or_404(course_id)
     if request.method == 'POST':
         course.title = request.form.get('title')
         course.description = request.form.get('description')
@@ -63,29 +63,29 @@ def edit_course(course_id):
 @admin_bp.route('/course/delete/<int:course_id>', methods=['POST'])
 @admin_required
 def delete_course(course_id):
-    course = Course.query.get_or_404(course_id)
+    course = course.query.get_or_404(course_id)
     for module in course.modules:
-        Lesson.query.filter_by(module_id=module.id).delete()
-    Module.query.filter_by(course_id=course_id).delete()
+        lesson.query.filter_by(module_id=module.id).delete()
+    module.query.filter_by(course_id=course_id).delete()
     db.session.delete(course)
     db.session.commit()
-    flash('Course deleted!', 'success')
+    flash('course deleted!', 'success')
     return redirect(url_for('admin.manage_courses'))
 
 # --- MODULES ---
 @admin_bp.route('/course/<int:course_id>/modules')
 @admin_required
 def manage_modules(course_id):
-    course = Course.query.get_or_404(course_id)
-    modules = Module.query.filter_by(course_id=course_id).order_by(Module.order_index).all()
+    course = course.query.get_or_404(course_id)
+    modules = module.query.filter_by(course_id=course_id).order_by(module.order_index).all()
     return render_template('admin/modules.html', course=course, modules=modules)
 
 @admin_bp.route('/course/<int:course_id>/module/add', methods=['GET', 'POST'])
 @admin_required
 def add_module(course_id):
-    course = Course.query.get_or_404(course_id)
+    course = course.query.get_or_404(course_id)
     if request.method == 'POST':
-        new_module = Module(
+        new_module = module(
             course_id=course_id,
             title=request.form.get('title'),
             description=request.form.get('description'),
@@ -99,7 +99,7 @@ def add_module(course_id):
 @admin_bp.route('/module/edit/<int:module_id>', methods=['GET', 'POST'])
 @admin_required
 def edit_module(module_id):
-    module = Module.query.get_or_404(module_id)
+    module = module.query.get_or_404(module_id)
     if request.method == 'POST':
         module.title = request.form.get('title')
         module.description = request.form.get('description')
@@ -112,14 +112,14 @@ def edit_module(module_id):
 @admin_bp.route('/module/<int:module_id>/lessons')
 @admin_required
 def manage_lessons(module_id):
-    module = Module.query.get_or_404(module_id)
-    lessons = Lesson.query.filter_by(module_id=module_id).order_by(Lesson.order_index).all()
+    module = module.query.get_or_404(module_id)
+    lessons = lesson.query.filter_by(module_id=module_id).order_by(lesson.order_index).all()
     return render_template('admin/lessons.html', module=module, lessons=lessons)
 
 @admin_bp.route('/module/<int:module_id>/lesson/add', methods=['GET', 'POST'])
 @admin_required
 def add_lesson(module_id):
-    module = Module.query.get_or_404(module_id)
+    module = module.query.get_or_404(module_id)
     if request.method == 'POST':
         file = request.files.get('lesson_file')
         video_url = request.form.get('video_url')
@@ -129,7 +129,7 @@ def add_lesson(module_id):
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             video_url = filename
         
-        lesson = Lesson(
+        lesson = lesson(
             module_id=module_id,
             title=request.form.get('title'),
             content_type=request.form.get('content_type'),
@@ -145,8 +145,8 @@ def add_lesson(module_id):
 @admin_bp.route('/lesson/edit/<int:lesson_id>', methods=['GET', 'POST'])
 @admin_required
 def edit_lesson(lesson_id):
-    lesson = Lesson.query.get_or_404(lesson_id)
-    module = Module.query.get(lesson.module_id)
+    lesson = lesson.query.get_or_404(lesson_id)
+    module = module.query.get(lesson.module_id)
     if request.method == 'POST':
         lesson.title = request.form.get('title')
         lesson.content_type = request.form.get('content_type')
@@ -160,7 +160,7 @@ def edit_lesson(lesson_id):
 @admin_bp.route('/lesson/delete/<int:lesson_id>', methods=['POST'])
 @admin_required
 def delete_lesson(lesson_id):
-    lesson = Lesson.query.get_or_404(lesson_id)
+    lesson = lesson.query.get_or_404(lesson_id)
     mid = lesson.module_id
     db.session.delete(lesson)
     db.session.commit()
