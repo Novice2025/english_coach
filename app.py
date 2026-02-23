@@ -21,22 +21,16 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
     
-    # Try to register blueprints one by one to find the killer
-    try:
-        from routes.auth import auth_bp
-        app.register_blueprint(auth_bp)
-        
-        from routes.main import main_bp
-        app.register_blueprint(main_bp)
-        
-        # We will temporarily comment these out to get you LIVE
-        # from routes.admin import admin_bp
-        # app.register_blueprint(admin_bp)
-        # from routes.student import student_bp
-        # app.register_blueprint(student_bp)
-        
-    except ImportError as e:
-        print(f"IMPORT ERROR: {e}")
+    # We load them all so the links in base.html work
+    from routes.auth import auth_bp
+    from routes.main import main_bp
+    from routes.admin import admin_bp
+    from routes.student import student_bp
+    
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(main_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(student_bp)
 
     with app.app_context():
         db.create_all()
