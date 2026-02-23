@@ -51,7 +51,7 @@ def register():
         new_user = User(
             email=email,
             name=name,
-            password=generate_password(password, method='scrypt'),
+            password=generate_password_hash(password, method='scrypt'),
             role='student'
         )
 
