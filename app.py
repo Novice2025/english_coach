@@ -14,7 +14,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-placeholder-123')
     
     # DATABASE: Use PostgreSQL if available (on Render), otherwise use SQLite
-    database_url = os.environ.get('DATABASE_URL', 'sqlite:///english_coach.db')
+    database_url = os.environ.get('DATABASE_URL', 'sqlite:///english_coach.db'
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
@@ -26,7 +26,7 @@ def create_app():
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     db.init_app(app)
-
+    with app.app_context(): db.create_all()
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
