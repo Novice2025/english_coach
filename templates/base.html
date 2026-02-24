@@ -22,7 +22,7 @@
                     <a href="{{ url_for('admin.dashboard') }}" class="text-slate-300 hover:text-white transition">Admin Stats</a>
                     <a href="{{ url_for('admin.manage_courses') }}" class="text-slate-300 hover:text-white transition">Manage Content</a>
                 {% else %}
-                    <a href="{{ url_for('student.my_courses') }}" class="text-slate-300 hover:text-white transition">My Courses</a>
+                    <a href="{{ # }}" class="text-slate-300 hover:text-white transition">My Courses</a>
                     <a href="{{ url_for('student.leaderboard') }}" class="text-slate-300 hover:text-white transition">Leaderboard</a>
                     <a href="{{ url_for('student.profile') }}" class="bg-indigo-600 px-4 py-2 rounded-xl text-white hover:bg-indigo-700 transition">My Profile</a>
                 {% endif %}

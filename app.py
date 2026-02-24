@@ -1,5 +1,6 @@
 from flask import Flask
 from database.db import db
+from flask_login import LoginManager
 import os
 
 def create_app():
@@ -11,7 +12,6 @@ def create_app():
     
     db.init_app(app)
     
-    from flask_login import LoginManager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -21,17 +21,11 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
     
-    # We load them all so the links in base.html work
     from routes.auth import auth_bp
     from routes.main import main_bp
-    from routes.admin import admin_bp
-    from routes.student import student_bp
-    
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
-    app.register_blueprint(admin_bp)
-    app.register_blueprint(student_bp)
-
+    
     with app.app_context():
         db.create_all()
     return app
