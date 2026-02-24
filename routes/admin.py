@@ -2,6 +2,9 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from database.db import db
 from models.user import User, Course, Module, Lesson
+from flask_login import login_required, current_user
+from database.db import db
+from models.user import User, Course, Module, Lesson
 import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from flask_login import login_required, current_user
