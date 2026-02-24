@@ -1,4 +1,10 @@
-from models.user import User, course, module, lesson, enrollment, lessonProgress, Message
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required, current_user
+from database.db import db
+from models.user import User, Course, Module, Lesson, Enrollment
+from flask_login import login_required, current_user
+from database.db import db
+from models.user import User, Course, Module, Lesson, Enrollment
 import io
 from datetime import datetime, timezone
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
@@ -12,7 +18,7 @@ from models.course import course
 from models.module import module
 from models.lesson import lesson
 from models.progress import Progress
-from models.user import User
+from models.user import User, Course, Module, Lesson, Enrollment
 from models.quiz import Quiz  # Ensure this is imported
 from models.message import Message # For the Support System
 
